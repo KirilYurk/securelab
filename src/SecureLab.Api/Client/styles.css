@@ -138,3 +138,17 @@ select {
     grid-template-columns: 1fr;
   }
 }
+
+.summary-list {
+  display: grid;
+  gap: 0.4rem;
+  list-style: none;
+  padding: 0;
+}
+
+.summary-list li {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #d8e0ec;
+  border-radius: 0.45rem;
+  background: #f5f8fc;
+}

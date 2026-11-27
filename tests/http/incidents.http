@@ -25,6 +25,23 @@ Accept: application/json
 GET {{host}}/api/incidents?status=Unknown
 Accept: application/json
 
-### Lab 1 extension point: expected 501 before student implementation
+### T-06 Severity summary: expected 200, all severities in order Low, Medium, High, Critical (seed: 1, 1, 1, 0)
 GET {{host}}/api/incidents/severity-summary
 Accept: application/json
+
+### T-06a Severity summary filtered by Triaged: expected 200, Medium = 1, others 0
+GET {{host}}/api/incidents/severity-summary?status=Triaged
+Accept: application/json
+
+### T-06b Severity summary filtered by Resolved: expected 200, all counts 0
+GET {{host}}/api/incidents/severity-summary?status=Resolved
+Accept: application/json
+
+### T-06c Severity summary with invalid status: expected 400 Validation Problem Details
+GET {{host}}/api/incidents/severity-summary?status=Unknown
+Accept: application/json
+
+### Trace id correlation: trace 0af7651916cd43dd8448eb211c80319c must appear in the API log
+GET {{host}}/api/incidents/severity-summary
+Accept: application/json
+traceparent: 00-0af7651916cd43dd8448eb211c80319c-b7ad6b7169203331-01

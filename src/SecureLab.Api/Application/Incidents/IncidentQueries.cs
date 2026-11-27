@@ -58,4 +58,40 @@ public sealed class IncidentQueries(SecureLabDbContext dbContext, ILogger<Incide
                     .ToList()))
             .SingleOrDefaultAsync(cancellationToken);
     }
+    /// <summary>
+    /// Підсумок кількості інцидентів за severity.
+    /// Політика нульових груп: повертаються всі значення IncidentSeverity (відсутні — з Count = 0).
+    /// Порядок: за зростанням критичності (порядок enum): Low, Medium, High, Critical.
+    /// </summary>
+    public async Task<IReadOnlyList<IncidentSeveritySummaryResponse>> GetSeveritySummaryAsync(
+        IncidentStatus? status,
+        string traceId,
+        CancellationToken cancellationToken)
+    {
+        var query = dbContext.Incidents.AsNoTracking();
+        if (status is not null)
+        {
+            query = query.Where(incident => incident.Status == status);
+        }
+
+        var groups = await query
+            .GroupBy(incident => incident.Severity)
+            .Select(group => new { Severity = group.Key, Count = group.Count() })
+            .ToListAsync(cancellationToken);
+
+        var counts = groups.ToDictionary(group => group.Severity, group => group.Count);
+        var summary = Enum.GetValues<IncidentSeverity>()
+            .Select(severity => new IncidentSeveritySummaryResponse(
+                severity.ToString(),
+                counts.GetValueOrDefault(severity)))
+            .ToList();
+
+        logger.LogInformation(
+            "Built severity summary with {GroupCount} non-empty groups for status filter {Status}, trace {TraceId}",
+            groups.Count,
+            status,
+            traceId);
+
+        return summary;
+    }
 }

@@ -75,7 +75,8 @@ public sealed class IncidentEndpointTests(SecureLabApiFactory factory)
         Assert.Equal("application/json", response.Content.Headers.ContentType?.MediaType);
         Assert.NotNull(summary);
         Assert.Equal(["Low", "Medium", "High", "Critical"], summary.Select(item => item.Severity));
-        Assert.Equal([1, 1, 1, 0], summary.Select(item => item.Count));
+        // ЛР 02: scaffold додає два Low-інциденти (…0004, …0005), тому Low = 1 + 2 = 3.
+        Assert.Equal([3, 1, 1, 0], summary.Select(item => item.Count));
     }
 
     [Fact]

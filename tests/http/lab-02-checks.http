@@ -1,0 +1,175 @@
+@api = http://localhost:5080
+# Коректна дата для POST: у минулому, але не старша за 90 днів (правило T-10).
+# Якщо файл використовується пізніше — оновіть @occurred.
+@occurred = 2026-11-27T10:00:00Z
+
+### USB — перевірка встановлення
+GET {{api}}/api/incidents/search?q=USB
+
+# ───────────── Етап 2: контракт POST /api/incidents ─────────────
+
+### T-01 — коректне створення (очікувано 201, Location, CreatedIncidentResponse)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Підозрілий USB-накопичувач в аудиторії 214",
+  "description": "Студент знайшов невідомий накопичувач біля проєктора.",
+  "severity": "Low",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+### T-02 — усі поля некоректні одночасно (400, errors: title, description, severity, occurredAtUtc)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "   ",
+  "description": "",
+  "severity": "Urgent"
+}
+
+### T-02 — severity "7": TryParse приймає, IsDefined відхиляє (400, errors.severity)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Severity seven check",
+  "description": "Перевірка числового рядка у severity.",
+  "severity": "7",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+### T-02 — відсутній occurredAtUtc (400, errors.occurredAtUtc)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Missing date check",
+  "description": "Дата інциденту не передана.",
+  "severity": "Low"
+}
+
+### T-02 — дата в майбутньому (400, errors.occurredAtUtc)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Future date check",
+  "description": "Дата інциденту в майбутньому.",
+  "severity": "Low",
+  "occurredAtUtc": "2099-01-01T00:00:00Z"
+}
+
+### T-02 — зсув часового поясу не є помилкою: 13:00+03:00 == 10:00Z (201, occurredAtUtc у UTC)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Offset date check",
+  "description": "Час передано з часовим поясом +03:00.",
+  "severity": "Low",
+  "occurredAtUtc": "2026-11-27T13:00:00+03:00"
+}
+
+### T-09 — High, опис 39 символів (400, errors.description)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Cross-field boundary 39",
+  "description": "012345678901234567890123456789012345678",
+  "severity": "High",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+### T-09 — High, опис 40 символів (201)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Cross-field boundary 40",
+  "description": "0123456789012345678901234567890123456789",
+  "severity": "High",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+### T-03 — повторний активний title (виконати двічі: 201, потім 409 без errors)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Duplicate title check",
+  "description": "Перевірка предметного конфлікту.",
+  "severity": "Low",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+### T-03 — той самий title з іншим регістром не є дублікатом (201)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "duplicate title check",
+  "description": "Перевірка регістру.",
+  "severity": "Low",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+### T-06 — ресурс не знайдено (404 problem+json, title «Інцидент не знайдено»)
+GET {{api}}/api/incidents/99999999-9999-9999-9999-999999999999
+
+### T-10 — власне правило: інцидент старший за 90 днів (400, errors.occurredAtUtc)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "title": "Old incident check",
+  "description": "Інцидент стався понад 90 днів тому.",
+  "severity": "Low",
+  "occurredAtUtc": "2026-01-01T00:00:00Z"
+}
+
+### A-02 — overposting: серверні поля в тілі ігноруються (201; далі GET за Location: новий id, New, Аліса Коваль)
+POST {{api}}/api/incidents
+Content-Type: application/json
+
+{
+  "id": "11111111-2222-3333-4444-555555555555",
+  "ownerUserId": "10000000-0000-0000-0000-000000000002",
+  "status": "Closed",
+  "createdAtUtc": "2000-01-01T00:00:00Z",
+  "title": "Overposting check",
+  "description": "Спроба передати серверні поля.",
+  "severity": "Low",
+  "occurredAtUtc": "{{occurred}}"
+}
+
+# ───────────── Етап 3/4: пошук (A–D до і після виправлення) ─────────────
+
+### A — звичайний пошук (200, один запис …0005)
+GET {{api}}/api/incidents/search?q=USB
+
+### B — немає збігів (200, [])
+GET {{api}}/api/incidents/search?q=zz-no-match
+
+### C — дозволений контрольний ввід лише для локального стенда (до: усі 5 seed; після: [])
+GET {{api}}/api/incidents/search?q=zz-no-match%27%20OR%20TRUE%20--%20
+
+### D — легітимний апостроф (до: 500; після: 200 «O'Brien classroom report»)
+GET {{api}}/api/incidents/search?q=O%27Brien
+
+### T-04 — апостроф у кирилиці (до: 500; після: 200 «Перевірка журналу комп'ютерного класу»)
+GET {{api}}/api/incidents/search?q=%D0%BA%D0%BE%D0%BC%D0%BF%27%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE
+
+### T-04 — символ % як літерал (після: [])
+GET {{api}}/api/incidents/search?q=%25
+
+### Сортування за severity (після: 0002 High → 0001 Medium → 0003, 0004, 0005 Low)
+GET {{api}}/api/incidents/search?sortBy=severity
+
+### Сортування за status (після: 0003, 0004, 0005 New → 0001 Triaged → 0002 InProgress)
+GET {{api}}/api/incidents/search?sortBy=status
+
+### T-05 — невідомий sortBy (після: 400, errors.sortBy)
+GET {{api}}/api/incidents/search?sortBy=price

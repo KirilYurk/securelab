@@ -1,0 +1,58 @@
+dotnet build tests/SecureLab.Api.Tests -c Release
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:04.66
+
+dotnet test tests/SecureLab.Api.Tests -c Release --logger "console;verbosity=normal"
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T04_LikeWildcardsAreLiterals_ReturnEmpty(value: "\\") [2 s]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T04_LikeWildcardsAreLiterals_ReturnEmpty(value: "%") [27 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T04_LikeWildcardsAreLiterals_ReturnEmpty(value: "_") [46 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T04_ApostropheInCyrillic_ReturnsClassroomLogRecord [52 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.S02_ControlInputFromStage3_ReturnsEmptyResultSet [8 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.EscapeLike_MakesWildcardsLiteral(input: "path\\A", expected: "%path\\\\A%") [< 1 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.EscapeLike_MakesWildcardsLiteral(input: "rate_5%", expected: "%rate\\_5\\%%") [< 1 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.EscapeLike_MakesWildcardsLiteral(input: "USB", expected: "%USB%") [< 1 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.EscapeLike_MakesWildcardsLiteral(input: "O'Brien", expected: "%O'Brien%") [< 1 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.EscapeLike_MakesWildcardsLiteral(input: "", expected: "%%") [< 1 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.Sorting_FollowsContractOrder(query: "?sortBy=createdAtUtc", expected: [4, 5, 3, 2, 1]) [35 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.Sorting_FollowsContractOrder(query: "?sortBy=status", expected: [3, 4, 5, 1, 2]) [41 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.Sorting_FollowsContractOrder(query: "?sortBy=severity", expected: [2, 1, 3, 4, 5]) [14 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.Sorting_FollowsContractOrder(query: "", expected: [4, 5, 3, 2, 1]) [7 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T04_ApostropheInLatin_ReturnsOBrienRecord [7 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T04_SearchMatchesDescriptionToo [6 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.T05_UnknownSortBy_Returns400WithSortByKey [26 ms]
+  Passed SecureLab.Api.Tests.Lab02SearchTests.S02_PositiveControl_UsbReturnsExactlyIncident0005 [19 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.GetList_ReturnsSeededIncidents [131 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.SeveritySummary_WithUnknownStatus_ReturnsValidationProblem400 [7 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.SeveritySummary_ExposesOnlySeverityAndCount [71 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.SeveritySummary_WithoutFilter_ReturnsAllSeveritiesInCriticalityOrder [11 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.SeveritySummary_FilteredByTriaged_CountsOnlyMedium [12 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.SeveritySummary_FilteredByResolved_ReturnsAllZeroCounts [22 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.Health_WhenDatabaseIsAvailable_ReturnsReady [22 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.ClientScript_DoesNotUseDangerousInnerHtmlSink [9 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.GetDetails_DoesNotExposeInternalOwnerFields [77 ms]
+  Passed SecureLab.Api.Tests.IncidentEndpointTests.GetDetails_ForUnknownId_ReturnsProblemDetails404 [8 ms]
+  Passed SecureLab.Api.Tests.SearchMechanicsTests.Search_ReturnsJson [69 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T09_HighOrCriticalRequires40CharDescription(severity: "High", length: 39, accepted: False) [196 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T09_HighOrCriticalRequires40CharDescription(severity: "High", length: 40, accepted: True) [214 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T09_HighOrCriticalRequires40CharDescription(severity: "Critical", length: 39, accepted: False) [15 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T09_HighOrCriticalRequires40CharDescription(severity: "Medium", length: 39, accepted: True) [18 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.A02_ServerManagedFieldsInBody_AreIgnored [27 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T03_DuplicateActiveTitle_Returns409WithoutErrors_CaseAndClosedDoNotBlock [60 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_InvalidDto_Returns400WithAllFieldKeysAndWritesNothing [6 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T10_OccurredAtOlderThan90Days_Returns400(daysAgo: 91, accepted: False) [7 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T10_OccurredAtOlderThan90Days_Returns400(daysAgo: 89, accepted: True) [15 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_SeverityOutsideAllowlist_Returns400WithSeverityKeyOnly(severity: "") [9 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_SeverityOutsideAllowlist_Returns400WithSeverityKeyOnly(severity: "Medium,High") [8 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_SeverityOutsideAllowlist_Returns400WithSeverityKeyOnly(severity: "3") [7 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_SeverityOutsideAllowlist_Returns400WithSeverityKeyOnly(severity: "7") [7 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_TitleLongerThan160_Returns400_And160IsAccepted [24 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T01_ValidCreate_Returns201WithLocationAndSafeResponseDto [16 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_OccurredAtWithOffset_IsStoredAsUtc [17 ms]
+  Passed SecureLab.Api.Tests.Lab02CreateIncidentTests.T02_OccurredAtMoreThan5MinutesInFuture_Returns400 [4 ms]
+Total tests: 46
+
+Підсумок:
+Passed!  - Failed:     0, Passed:    46, Skipped:     0, Total:    46, Duration: 3 s - SecureLab.Api.Tests.dll (net10.0)

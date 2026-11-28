@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Duplicate title check","description":"Перевірка предметного конфлікту.","severity":"Low","occurredAtUtc":"2026-11-28T10:58:33Z"}
+
+--- response ---
+HTTP/1.1 409 Conflict
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.10","title":"Інцидент уже зареєстровано","status":409,"detail":"Активний інцидент з такою самою назвою вже існує. Змініть назву або дочекайтеся закриття наявного інциденту.","traceId":"00-4cc3496d0581f23bdde796f731de2a85-70043de377739c82-00"}

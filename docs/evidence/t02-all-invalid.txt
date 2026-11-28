@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"   ","description":"","severity":"Urgent"}
+
+--- response ---
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"title":["Назва обов'язкова."],"description":["Опис обов'язковий."],"severity":["Допустимі значення: Low, Medium, High, Critical."],"occurredAtUtc":["Час інциденту обов'язковий."]},"traceId":"00-5db957ee5c21ca8bdfd74f27af351025-caf28d950146036d-00"}

@@ -1,0 +1,127 @@
+git diff 4b87cf0..b37cc32 -- src   (vulnerable -> fixed)
+
+diff --git a/src/SecureLab.Api/Scaffolding/Lab02Endpoints.cs b/src/SecureLab.Api/Scaffolding/Lab02Endpoints.cs
+index 33721c9..44de424 100644
+--- a/src/SecureLab.Api/Scaffolding/Lab02Endpoints.cs
++++ b/src/SecureLab.Api/Scaffolding/Lab02Endpoints.cs
+@@ -15,22 +15,10 @@ public static class Lab02Endpoints
+ 
+     public static void MapLab02Endpoints(this WebApplication app)
+     {
+-        app.MapGet("/api/incidents/search", async (string? q, string? sortBy, SecureLabDbContext db, CancellationToken ct) =>
+-        {
+-            var order = sortBy switch
+-            {
+-                null or "" or "createdAtUtc" => "created_at_utc DESC",
+-                "severity" => "severity", "status" => "status", _ => sortBy
+-            };
+-            var sql = "SELECT * FROM incidents WHERE title ILIKE '%" + (q ?? "")
+-                + "%' OR description ILIKE '%" + (q ?? "") + "%' ORDER BY " + order + " LIMIT 50";
+-            var rows = await db.Incidents.FromSqlRaw(sql).AsNoTracking().ToListAsync(ct);
+-            return Results.Ok(rows.Select(row => new
+-            {
+-                row.Id, row.Title, row.Description,
+-                Severity = row.Severity.ToString(), Status = row.Status.ToString(), row.CreatedAtUtc
+-            }));
+-        });
++        app.MapGet("/api/incidents/search", SearchAsync)
++            .WithName("SearchIncidents")
++            .Produces<List<IncidentSearchItemResponse>>()
++            .ProducesValidationProblem();
+         app.MapPost("/api/incidents", CreateIncidentAsync)
+             .WithName("CreateIncident")
+             .Produces<CreatedIncidentResponse>(StatusCodes.Status201Created)
+@@ -38,6 +26,77 @@ public static class Lab02Endpoints
+             .ProducesProblem(StatusCodes.Status409Conflict);
+     }
+ 
++    private const int SearchRowLimit = 50;
++    private static readonly string[] AllowedSortBy = ["createdAtUtc", "severity", "status"];
++
++    private static async Task<IResult> SearchAsync(
++        string? q,
++        string? sortBy,
++        SecureLabDbContext db,
++        CancellationToken ct)
++    {
++        // Структура запиту (ORDER BY) — лише з серверного allowlist; невідоме значення
++        // не доходить до БД. Назву стовпця параметризувати неможливо, тому тільки allowlist.
++        if (!string.IsNullOrEmpty(sortBy) && !AllowedSortBy.Contains(sortBy, StringComparer.Ordinal))
++        {
++            return Results.ValidationProblem(new Dictionary<string, string[]>
++            {
++                ["sortBy"] = ["Допустимі значення: createdAtUtc, severity, status."]
++            });
++        }
++
++        // Значення q — лише дані: передається в БД окремим параметром @pattern,
++        // а EscapeLike робить %, _ і \ літеральними символами.
++        var pattern = EscapeLike(q ?? "");
++        var query = db.Incidents
++            .AsNoTracking()
++            .Where(item => EF.Functions.ILike(item.Title, pattern, "\\")
++                || EF.Functions.ILike(item.Description, pattern, "\\"));
++
++        // Ранги замість алфавітного порядку рядкових значень enum (EF → CASE WHEN).
++        var ordered = sortBy switch
++        {
++            "severity" => query
++                .OrderBy(item => item.Severity == IncidentSeverity.Critical ? 0
++                    : item.Severity == IncidentSeverity.High ? 1
++                    : item.Severity == IncidentSeverity.Medium ? 2
++                    : 3)
++                .ThenBy(item => item.Id),
++            "status" => query
++                .OrderBy(item => item.Status == IncidentStatus.New ? 0
++                    : item.Status == IncidentStatus.Triaged ? 1
++                    : item.Status == IncidentStatus.InProgress ? 2
++                    : item.Status == IncidentStatus.Resolved ? 3
++                    : 4)
++                .ThenBy(item => item.Id),
++            _ => query
++                .OrderByDescending(item => item.CreatedAtUtc)
++                .ThenBy(item => item.Id)
++        };
++
++        var items = await ordered
++            .Take(SearchRowLimit)
++            .Select(item => new IncidentSearchItemResponse(
++                item.Id,
++                item.Title,
++                item.Description,
++                item.Severity.ToString(),
++                item.Status.ToString(),
++                item.CreatedAtUtc))
++            .ToListAsync(ct);
++
++        return Results.Ok(items);
++    }
++
++    // Пошук підрядка як літерала: спершу \, потім _ і %, далі обгортка %…%.
++    // Апостроф не екранується — це звичайне значення параметра.
++    public static string EscapeLike(string value) =>
++        "%" + value
++            .Replace("\\", "\\\\", StringComparison.Ordinal)
++            .Replace("_", "\\_", StringComparison.Ordinal)
++            .Replace("%", "\\%", StringComparison.Ordinal)
++        + "%";
++
+     private static async Task<IResult> CreateIncidentAsync(
+         CreateIncidentRequest request,
+         SecureLabDbContext db,
+@@ -148,6 +207,15 @@ public static class Lab02Endpoints
+ public sealed record CreateIncidentRequest(
+     string? Title, string? Description, string? Severity, DateTimeOffset? OccurredAtUtc);
+ 
++// Елемент результату пошуку: та сама форма, що й у стартовому search.
++public sealed record IncidentSearchItemResponse(
++    Guid Id,
++    string Title,
++    string Description,
++    string Severity,
++    string Status,
++    DateTimeOffset CreatedAtUtc);
++
+ // Response DTO для 201 Created: без OwnerUserId та інших внутрішніх полів entity.
+ public sealed record CreatedIncidentResponse(
+     Guid Id,

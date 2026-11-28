@@ -1,0 +1,6 @@
+py -3 resources/copyable/data-access-scan.py .   (fixed commit b37cc32)
+
+src\SecureLab.Api\Data\DatabaseBootstrap.cs:29:await dbContext.Database.ExecuteSqlRawAsync(
+src\SecureLab.Api\Scaffolding\Lab02Endpoints.cs:38:// Структура запиту (ORDER BY) — лише з серверного allowlist; невідоме значення
+tests\SecureLab.Api.Tests\Lab02SearchTests.cs:19:using var response = await _client.GetAsync("/api/incidents/search" + query);
+tests\SecureLab.Api.Tests\Lab02SearchTests.cs:97:Assert.DoesNotContain("ORDER BY", json, StringComparison.OrdinalIgnoreCase);

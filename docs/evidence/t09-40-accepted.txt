@@ -1,0 +1,16 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Cross-field boundary 40","description":"0123456789012345678901234567890123456789","severity":"High","occurredAtUtc":"2026-11-28T10:58:33Z"}
+
+--- response ---
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Location: /api/incidents/a6680823-55cb-4935-bd6c-c3b568018d26
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"id":"a6680823-55cb-4935-bd6c-c3b568018d26","title":"Cross-field boundary 40","severity":"High","status":"New","occurredAtUtc":"2026-11-28T10:58:33+00:00","createdAtUtc":"2026-11-28T12:58:34.0256086+00:00","updatedAtUtc":"2026-11-28T12:58:34.0256086+00:00"}

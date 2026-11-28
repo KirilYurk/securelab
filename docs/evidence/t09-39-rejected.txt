@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Cross-field boundary 39","description":"012345678901234567890123456789012345678","severity":"High","occurredAtUtc":"2026-11-28T10:58:33Z"}
+
+--- response ---
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"description":["Для High/Critical опис має містити щонайменше 40 символів."]},"traceId":"00-33c8a30f80efdb9ce912bdc90614766d-dcf0f2797042978a-00"}

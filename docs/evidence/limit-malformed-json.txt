@@ -1,0 +1,25 @@
+POST /api/incidents  body: {"title":"Numeric severity","description":"x","severity":7,"occurredAtUtc":"2026-11-27T10:00:00Z"}
+
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 13:01:15 GMT
+Server: Kestrel
+Cache-Control: no-cache,no-store
+Expires: -1
+Pragma: no-cache
+Transfer-Encoding: chunked
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.6.1","title":"An error occurred while processing your request.","status":500,"traceId":"00-c1f398d4bba0a84171cfb70f28c13897-faee2618de78a7f2-00"}
+
+POST /api/incidents  body: {"title": (обрізаний JSON)
+
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 13:01:15 GMT
+Server: Kestrel
+Cache-Control: no-cache,no-store
+Expires: -1
+Pragma: no-cache
+Transfer-Encoding: chunked
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.6.1","title":"An error occurred while processing your request.","status":500,"traceId":"00-b4c4daa4383221c605db4b72d21fbd06-9d7dfc590b1d7d20-00"}

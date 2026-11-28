@@ -1,0 +1,11 @@
+Локальна перевірка чутливості A-02 (не комічено; відкат через git restore src/SecureLab.Api/Scaffolding/Lab02Endpoints.cs)
+
+Тимчасова зміна: у CreateIncidentRequest додано string? Status, у handler Status = Enum.Parse<IncidentStatus>(request.Status ?? "New").
+
+dotnet test tests/SecureLab.Api.Tests -c Release --filter FullyQualifiedName~A02
+  Failed SecureLab.Api.Tests.Lab02CreateIncidentTests.A02_ServerManagedFieldsInBody_AreIgnored
+  Expected: "New"
+  Actual:   "Closed"
+  Failed!  - Failed: 1, Passed: 0, Skipped: 0, Total: 1
+
+Після git restore: git status чистий, тест знову Passed.

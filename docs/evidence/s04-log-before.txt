@@ -1,0 +1,8 @@
+Vulnerable commit 4b87cf0, журнал Microsoft.EntityFrameworkCore.Database.Command (фрагмент)
+
+# Запит A (?q=USB): значення q вклеєне в текст SQL, параметрів немає
+Executed DbCommand (5ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+SELECT * FROM incidents WHERE title ILIKE '%USB%' OR description ILIKE '%USB%' ORDER BY created_at_utc DESC LIMIT 50
+
+# Запит D (?q=O'Brien): апостроф закриває рядковий літерал -> синтаксична помилка PostgreSQL -> 500
+Npgsql.PostgresException (0x80004005): 42601: syntax error at or near "Brien"

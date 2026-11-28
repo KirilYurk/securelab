@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Missing date check","description":"Дата інциденту не передана.","severity":"Low"}
+
+--- response ---
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"occurredAtUtc":["Час інциденту обов'язковий."]},"traceId":"00-8a239c6435d41812a7ec1dff0f38ed5a-bf0fe8dd86bca051-00"}

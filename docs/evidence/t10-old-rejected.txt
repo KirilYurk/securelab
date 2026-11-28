@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Old incident check","description":"Інцидент стався понад 90 днів тому.","severity":"Low","occurredAtUtc":"2026-01-01T00:00:00Z"}
+
+--- response ---
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"occurredAtUtc":["Інцидент старший за 90 днів реєструється через ретроспективний розбір, а не цією формою."]},"traceId":"00-dab44dc2f12cb77b0451b5b2ae3b9bb3-3ec50cefe49238ef-00"}

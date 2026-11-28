@@ -1,0 +1,16 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Підозрілий USB-накопичувач в аудиторії 214","description":"Студент знайшов невідомий накопичувач біля проєктора.","severity":"Low","occurredAtUtc":"2026-11-28T10:58:33Z"}
+
+--- response ---
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Location: /api/incidents/c18a2d7d-52d1-41bc-a77f-ba1108a33de8
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"id":"c18a2d7d-52d1-41bc-a77f-ba1108a33de8","title":"Підозрілий USB-накопичувач в аудиторії 214","severity":"Low","status":"New","occurredAtUtc":"2026-11-28T10:58:33+00:00","createdAtUtc":"2026-11-28T12:58:33.6012731+00:00","updatedAtUtc":"2026-11-28T12:58:33.6012731+00:00"}

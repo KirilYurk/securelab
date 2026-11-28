@@ -1,0 +1,11 @@
+GET http://localhost:5080/api/incidents/search?sortBy=price
+
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:13 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"sortBy":["Допустимі значення: createdAtUtc, severity, status."]},"traceId":"00-be07305d012179b9b1108fa4ae0bb022-d30d43aa2883f3f5-00"}

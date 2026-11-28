@@ -1,0 +1,12 @@
+GET http://localhost:5080/api/incidents/search?q=%D0%BA%D0%BE%D0%BC%D0%BF%27%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D0%BE%D0%B3%D0%BE
+
+HTTP/1.1 500 Internal Server Error
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:54:49 GMT
+Server: Kestrel
+Cache-Control: no-cache,no-store
+Expires: -1
+Pragma: no-cache
+Transfer-Encoding: chunked
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.6.1","title":"An error occurred while processing your request.","status":500,"traceId":"00-d8dbde232b3798171d464e92bb891d61-02c5b5777ec78a32-00"}

@@ -1,0 +1,19 @@
+Перевірка, що security regression-тести справді ловлять дефект.
+Тимчасовий worktree на vulnerable commit 4b87cf0 + файл Lab02SearchTests.cs з fixed commit b37cc32
+(для компіляції додано лише record IncidentSearchItemResponse і заглушку EscapeLike; unit-тести EscapeLike виключено фільтром).
+
+dotnet test tests/SecureLab.Api.Tests -c Release --filter "FullyQualifiedName~Lab02SearchTests&FullyQualifiedName!~EscapeLike"
+
+На vulnerable 4b87cf0:
+  Failed S02_ControlInputFromStage3_ReturnsEmptyResultSet        (контрольний ввід C розширив вибірку)
+  Failed T04_ApostropheInLatin_ReturnsOBrienRecord               (500 замість 200)
+  Failed T04_ApostropheInCyrillic_ReturnsClassroomLogRecord      (500 замість 200)
+  Failed T04_LikeWildcardsAreLiterals_ReturnEmpty(value: "%")    (% як шаблон -> усі записи)
+  Failed T04_LikeWildcardsAreLiterals_ReturnEmpty(value: "_")    (_ як шаблон -> усі записи)
+  Failed T05_UnknownSortBy_Returns400WithSortByKey               (сире sortBy у ORDER BY -> 500)
+  Failed Sorting_FollowsContractOrder(?sortBy=severity)          (алфавітний порядок рядків)
+  Failed Sorting_FollowsContractOrder(?sortBy=status)            (алфавітний порядок рядків)
+  Failed!  - Failed: 8, Passed: 5, Total: 13
+
+На fixed b37cc32: ті самі тести Passed (див. tests-final.txt).
+Worktree видалено.

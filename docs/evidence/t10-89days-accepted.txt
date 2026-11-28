@@ -1,0 +1,16 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Recent incident check","description":"Інцидент стався 89 днів тому.","severity":"Low","occurredAtUtc":"2026-08-31T12:58:34Z"}
+
+--- response ---
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Location: /api/incidents/d130aed9-11b1-4dac-b0f6-b356ff7a830a
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"id":"d130aed9-11b1-4dac-b0f6-b356ff7a830a","title":"Recent incident check","severity":"Low","status":"New","occurredAtUtc":"2026-08-31T12:58:34+00:00","createdAtUtc":"2026-11-28T12:58:34.1882191+00:00","updatedAtUtc":"2026-11-28T12:58:34.1882191+00:00"}

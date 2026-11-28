@@ -1,0 +1,16 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Offset date check","description":"Час передано з часовим поясом +03:00.","severity":"Low","occurredAtUtc":"2026-11-28T13:58:33+03:00"}
+
+--- response ---
+HTTP/1.1 201 Created
+Content-Type: application/json; charset=utf-8
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Location: /api/incidents/3211df2f-cc3d-4377-be33-8f6806731d8e
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"id":"3211df2f-cc3d-4377-be33-8f6806731d8e","title":"Offset date check","severity":"Low","status":"New","occurredAtUtc":"2026-11-28T10:58:33+00:00","createdAtUtc":"2026-11-28T12:58:33.9662354+00:00","updatedAtUtc":"2026-11-28T12:58:33.9662354+00:00"}

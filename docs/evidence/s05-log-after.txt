@@ -1,0 +1,13 @@
+Fixed commit b37cc32, журнал Microsoft.EntityFrameworkCore.Database.Command (фрагмент)
+
+# Запит A (?q=USB): текст SQL сталий, значення передано окремими параметрами (у журналі приховано як '?')
+info: Microsoft.EntityFrameworkCore.Database.Command[20101]
+Executed DbCommand (6ms) [Parameters=[@pattern='?', @pattern0='?', @p='?' (DbType = Int32)], CommandType='Text', CommandTimeout='30']
+SELECT i.id, i.title, i.description, i.severity::text, i.status::text, i.created_at_utc
+FROM incidents AS i
+WHERE i.title ILIKE @pattern ESCAPE '\' OR i.description ILIKE @pattern0 ESCAPE '\'
+ORDER BY i.created_at_utc DESC, i.id
+LIMIT @p
+
+# Контрольний ввід C і O'Brien дають той самий текст SQL: змінюється лише значення @pattern, структура запиту ні.
+# Невідомий sortBy (price) відхиляється 400 до побудови запиту: у журналі для нього DbCommand відсутній.

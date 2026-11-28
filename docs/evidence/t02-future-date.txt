@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Future date check","description":"Дата інциденту в майбутньому.","severity":"Low","occurredAtUtc":"2099-01-01T00:00:00Z"}
+
+--- response ---
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"occurredAtUtc":["Час інциденту не може бути в майбутньому (допуск 5 хвилин)."]},"traceId":"00-0448ad054f1ee5d497bdb928dc64228e-d266edaea6a6e210-00"}

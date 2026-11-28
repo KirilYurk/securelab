@@ -1,0 +1,11 @@
+GET http://localhost:5080/api/incidents/99999999-9999-9999-9999-999999999999
+
+HTTP/1.1 404 Not Found
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:13 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.5","title":"Інцидент не знайдено","status":404,"detail":"Інцидент '99999999-9999-9999-9999-999999999999' не існує.","traceId":"00-026b338b335b03cccf0737f829527785-150983a0d4441980-00"}

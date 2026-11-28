@@ -1,0 +1,15 @@
+POST http://localhost:5080/api/incidents
+Content-Type: application/json
+
+{"title":"Severity seven check","description":"Перевірка числового рядка у severity.","severity":"7","occurredAtUtc":"2026-11-28T10:58:33Z"}
+
+--- response ---
+HTTP/1.1 400 Bad Request
+Content-Type: application/problem+json
+Date: Sat, 28 Nov 2026 12:58:33 GMT
+Server: Kestrel
+Transfer-Encoding: chunked
+X-Content-Type-Options: nosniff
+Referrer-Policy: no-referrer
+
+{"type":"https://tools.ietf.org/html/rfc9110#section-15.5.1","title":"One or more validation errors occurred.","status":400,"errors":{"severity":["Допустимі значення: Low, Medium, High, Critical."]},"traceId":"00-de242f4c50a71aee276be8578fdb80ac-99fec47099c1fbab-00"}
